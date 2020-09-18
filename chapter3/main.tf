@@ -1,10 +1,8 @@
+# Partial configuration. The other settings (e.g. bucket, region) will be
+# passed in from a file via -backend-config arguments to 'terraform init'
 terraform {
     backend "s3" {
-        bucket = "terraform-up-and-running-arp-state"
         key = "global/s3/terraform.tfstate"
-        region = "eu-central-1"
-        dynamodb_table = "terraform-up-and-running-locks"
-        encrypt = true
     }
 }
 
