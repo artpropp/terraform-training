@@ -10,5 +10,5 @@ provider "aws" {
 
 resource "aws_instance" "example" {
   ami = "ami-0c960b947cbb2dd16"
-  instance_type = "t3.micro"
+  instance_type = terraform.workspace == "default" ? "t3.micro" : "t2.nano"
 }
