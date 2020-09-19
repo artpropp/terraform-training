@@ -46,6 +46,7 @@ resource "aws_security_group" "instance" {
 }
 
 resource "aws_autoscaling_group" "example" {
+    name = "example - ${aws_launch_configuration.example.name}"
     launch_configuration = aws_launch_configuration.example.name
     vpc_zone_identifier = data.aws_subnet_ids.default.ids
 
@@ -54,10 +55,6 @@ resource "aws_autoscaling_group" "example" {
 
     min_size = 2
     max_size = 3
-
-    lifecycle {
-        create_before_destroy = true
-    }
 
     tag {
         key = "Name"
