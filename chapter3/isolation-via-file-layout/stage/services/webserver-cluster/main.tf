@@ -17,7 +17,10 @@ resource "aws_launch_configuration" "example" {
 
     user_data = <<-EOF
                 #!/bin/bash
-                echo "Hello World! Greetings by Terraform" > index.html
+                echo "Hello World! Greetings by Terraform" >> index.html
+                echo "${data.terraform_remote_state.db.outputs.address}" >> index.html
+                echo "${data.terraform_remote_state.db.outputs.port}" >> index.html
+                echo "check" >> index.html
                 nohup busybox httpd -f -p ${var.server_port} &
                 EOF
 
@@ -47,8 +50,7 @@ resource "aws_autoscaling_group" "example" {
     health_check_type = "ELB"
 
     min_size = 2
-    max_size = 10
-    desired_capacity = 4
+    max_size = 3
 
     tag {
         key = "Name"
@@ -139,5 +141,15 @@ resource "aws_lb_listener_rule" "asg" {
     action {
         type = "forward"
         target_group_arn = aws_lb_target_group.asg.arn
+    }
+}
+
+data "terraform_remote_state" "db" {
+    backend = "s3"
+
+    config = {
+        bucket = "terraform-up-and-running-arp-state"
+        key = "stage/data-stores/mysql/terraform.tfstate"
+        region = "eu-central-1"
     }
 }
