@@ -13,6 +13,7 @@ provider "aws" {
 
 module "webserver_cluster" {
     source = "../../../modules/services/webserver-cluster"
+    source = "git@github.com/artpropp/terraform-modules.git/services/webserver-cluster?rev=v0.1.0"
 
     cluster_name = "webservers-prod"
     db_remote_state_bucket = "terraform-up-and-running-arp-state"
@@ -24,7 +25,7 @@ module "webserver_cluster" {
 }
 
 resource "aws_autoscaling_schedule" "scale_out_during_business_hours" {
-    schedule_action_name = "scale-out-during-business-hours"
+    scheduled_action_name = "scale-out-during-business-hours"
     min_size = 2
     max_size = 10
     desired_capacity = 10
@@ -34,7 +35,7 @@ resource "aws_autoscaling_schedule" "scale_out_during_business_hours" {
 }
 
 resource "aws_autoscaling_schedule" "scale_in_at_night" {
-    schedule_action_name = "scale-in-at-night"
+    scheduled_action_name = "scale-in-at-night"
     min_size = 2
     max_size = 10
     desired_capacity = 2
